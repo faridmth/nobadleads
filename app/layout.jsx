@@ -1,5 +1,6 @@
 import { Manrope } from "next/font/google";
 import { Toaster } from "sonner";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -9,7 +10,7 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "Lead Qualifier · Score leads from a spreadsheet",
+  title: "nobadleads · Score leads from a spreadsheet",
   description:
     "Upload an Excel of leads, get an ICP score and three cold email openers for each, powered by website screenshots and GPT-4o.",
 };
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </body>
+      <GoogleAnalytics gaId="G-B7LPKJK516" />
     </html>
   );
 }

@@ -11,11 +11,9 @@ import {
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
 
-const SR_KEY_STORAGE = "leadqualifier:sr-key";
-const TRIAL_HIT_STORAGE = "leadqualifier:trial-hit";
-const ICP_KEY = "leadqualifier:icp-prompt";
-const ICP_URL_KEY = "leadqualifier:icp-url";
-const ICP_SHOT_KEY = "leadqualifier:icp-shot";
+const SR_KEY_STORAGE = "nobadleads:sr-key";
+const TRIAL_HIT_STORAGE = "nobadleads:trial-hit";
+const ICP_KEY = "nobadleads:icp-prompt";
 
 // Per-run free trial: each click of Score gives the user up to this many leads
 // for free (using our Screenshot Render key) when they have no key of their own.
@@ -31,13 +29,12 @@ export default function ToolPage() {
   const [trialHit, setTrialHit] = useState(false);
 
   // ICP
-  const [icpUrl, setIcpUrl] = useState("");
-  const [icpScreenshot, setIcpScreenshot] = useState(null);
   const [icpPrompt, setIcpPrompt] = useState("");
-  const [icpLoading, setIcpLoading] = useState(false);
-  const [icpError, setIcpError] = useState(null);
   const [promptSaved, setPromptSaved] = useState(false);
-  const [shotOpen, setShotOpen] = useState(false);
+  const [enhancing, setEnhancing] = useState(false);
+  const [enhanceError, setEnhanceError] = useState(null);
+  // Keep the pre-enhance draft so the user can undo within a short window
+  const [preEnhanceDraft, setPreEnhanceDraft] = useState(null);
 
   // leads
   const [rows, setRows] = useState([]);
@@ -75,10 +72,6 @@ export default function ToolPage() {
     if (t === "1") setTrialHit(true);
     const p = localStorage.getItem(ICP_KEY);
     if (p) setIcpPrompt(p);
-    const u = localStorage.getItem(ICP_URL_KEY);
-    if (u) setIcpUrl(u);
-    const s = localStorage.getItem(ICP_SHOT_KEY);
-    if (s) setIcpScreenshot(s);
   }, []);
 
   useEffect(() => {
@@ -91,12 +84,6 @@ export default function ToolPage() {
       localStorage.removeItem(SR_KEY_STORAGE);
     }
   }, [srKey]);
-  useEffect(() => {
-    if (icpUrl) localStorage.setItem(ICP_URL_KEY, icpUrl);
-  }, [icpUrl]);
-  useEffect(() => {
-    if (icpScreenshot) localStorage.setItem(ICP_SHOT_KEY, icpScreenshot);
-  }, [icpScreenshot]);
 
   useEffect(() => {
     if (!icpPrompt) return;
@@ -122,54 +109,37 @@ export default function ToolPage() {
     setSettingsMode("default");
   }
 
-  async function generatePrompt() {
-    if (!icpUrl) {
-      toast.error("Enter your website URL");
+  async function enhancePrompt() {
+    if (!icpPrompt.trim()) {
+      toast.error("Write something first, then enhance");
       return;
     }
-    setIcpError(null);
-    setIcpLoading(true);
-    setShotOpen(false);
-    setIcpPrompt("");
-    setIcpScreenshot(null);
+    setEnhanceError(null);
+    setEnhancing(true);
+    const original = icpPrompt;
     try {
-      const shotRes = await fetch("/api/screenshot", {
+      const res = await fetch("/api/enhance-prompt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: icpUrl, apiKey: srKey || undefined }),
+        body: JSON.stringify({ draft: icpPrompt }),
       });
-      const shotJson = await shotRes.json();
-      if (!shotRes.ok || !shotJson.success) {
-        if (shotJson.code === "credits_exhausted") {
-          openSettings("credits_exhausted");
-          return;
-        }
-        if (shotJson.code === "invalid_key") {
-          openSettings("invalid_key");
-          return;
-        }
-        throw new Error("Error");
-      }
-      setIcpScreenshot(shotJson.data.screenshot);
-
-      const promptRes = await fetch("/api/build-prompt", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          screenshotUrl: shotJson.data.screenshot,
-          siteUrl: icpUrl,
-          title: shotJson.data.title,
-          description: shotJson.data.description,
-        }),
-      });
-      const promptJson = await promptRes.json();
-      if (!promptRes.ok) throw new Error("Error");
-      setIcpPrompt(promptJson.prompt);
+      const json = await res.json();
+      if (!res.ok || !json.prompt) throw new Error("Error");
+      setPreEnhanceDraft(original);
+      setIcpPrompt(json.prompt);
+      toast.success("Enhanced");
     } catch {
-      setIcpError("Error");
+      setEnhanceError("Error");
+      toast.error("Could not enhance. Try again.");
     } finally {
-      setIcpLoading(false);
+      setEnhancing(false);
     }
+  }
+
+  function undoEnhance() {
+    if (preEnhanceDraft == null) return;
+    setIcpPrompt(preEnhanceDraft);
+    setPreEnhanceDraft(null);
   }
 
   const handleFile = useCallback(async (file) => {
@@ -334,7 +304,7 @@ export default function ToolPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `leadqualifier-${Date.now()}.csv`;
+    a.download = `nobadleads-${Date.now()}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -370,26 +340,18 @@ export default function ToolPage() {
     <main className="h-screen flex flex-col overflow-hidden">
       <header className="shrink-0 bg-background border-b">
         <div className="px-5 h-12 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="h-7 w-7 rounded-md bg-brand flex items-center justify-center shadow-sm">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="6" y1="20" x2="6" y2="14" />
-                <line x1="12" y1="20" x2="12" y2="10" />
-                <line x1="18" y1="20" x2="18" y2="6" />
+          <Link href="/" className="flex items-center">
+            <span className="inline-flex items-center gap-1 text-sm font-semibold tracking-tight">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="text-brand h-4.5 w-4.5" aria-hidden>
+                <path d="M5 5 L21 7 L19 19 L3 17 Z" />
               </svg>
+              <span>nobadleads<span className="text-brand">.</span></span>
             </span>
-            <span className="text-sm font-semibold tracking-tight">leadqualifier</span>
           </Link>
           <div className="flex items-center gap-2">
+            {trialHit && !srKey && (
+              <TrialReminderPill onClick={() => openSettings("trial_ended")} />
+            )}
             <HeaderStatus srKey={srKey} onClick={() => openSettings("default")} />
             <button
               onClick={() => openSettings("default")}
@@ -413,7 +375,7 @@ export default function ToolPage() {
                 <div className="flex items-center gap-1.5">
                   <h2 className="text-sm font-medium">Your ICP</h2>
                   <InfoTip>
-                    The kind of company you sell to. Used to grade every lead.
+                    Describe your business and ideal customer. Used to grade every lead.
                   </InfoTip>
                 </div>
                 {promptSaved && (
@@ -421,105 +383,66 @@ export default function ToolPage() {
                 )}
               </div>
               <p className="text-xs text-muted leading-relaxed -mt-1">
-                Paste your company URL. We&apos;ll generate a scoring prompt for
-                you. You can also write your own below.
+                Describe what you sell and who your ideal customer is. The AI
+                uses this to score every lead. Rough notes are fine, then click
+                Enhance.
               </p>
 
-              <div className="flex flex-col gap-2">
-                <label className="text-[11px] text-muted">Your website</label>
-                <input
-                  type="url"
-                  value={icpUrl}
-                  onChange={(e) => setIcpUrl(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && !icpLoading && generatePrompt()}
-                  placeholder="yourcompany.com"
-                  className="h-9 px-3 rounded-md border bg-background text-sm focus:outline-none focus:border-foreground transition-colors"
-                />
-                <button
-                  onClick={generatePrompt}
-                  disabled={icpLoading}
-                  className="h-9 px-3 rounded-md bg-foreground/8 text-foreground hover:bg-foreground/12 transition-colors text-sm font-medium inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-                >
-                  {icpLoading ? (
-                    <>
-                      <Spinner />
-                      <span>
-                        Generating
-                        <DotPulse />
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-brand">
-                        <SparkleIcon />
-                      </span>
-                      {icpScreenshot ? "Generate new score prompt" : "Generate score prompt"}
-                    </>
-                  )}
-                </button>
-                {icpLoading && (
-                  <div className="rounded-md border bg-surface/60 px-3 py-3 flex flex-col gap-2">
-                    <div className="h-2 w-full bg-border rounded overflow-hidden">
-                      <div className="h-full w-1/3 bg-brand rounded animate-[progress_1.4s_ease-in-out_infinite]" />
-                    </div>
-                    <span className="text-[11px] text-muted">
-                      Capturing your site and drafting your scoring prompt. This takes 10 to 20 seconds.
-                    </span>
-                  </div>
-                )}
-
-                {icpScreenshot && (
-                  <button
-                    onClick={() => setShotOpen((v) => !v)}
-                    className="flex items-center gap-2 rounded-md border bg-background p-1.5 hover:bg-surface transition-colors text-left cursor-pointer"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={icpScreenshot}
-                      alt=""
-                      className="w-12 h-8 object-cover object-top rounded-sm border"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs font-medium truncate">{icpUrl}</div>
-                      <div className="text-[11px] text-muted">
-                        {shotOpen ? "Hide screenshot" : "View captured screenshot"}
-                      </div>
-                    </div>
-                    <span className="text-muted-soft">{shotOpen ? "−" : "+"}</span>
-                  </button>
-                )}
-
-                {icpScreenshot && shotOpen && (
-                  <div className="rounded-md border overflow-hidden">
-                    <div className="max-h-72 overflow-y-auto bg-white">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={icpScreenshot} alt="" className="w-full h-auto block" />
-                    </div>
-                  </div>
-                )}
-
-                {icpError && <p className="text-xs text-danger">{icpError}</p>}
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-1.5">
-                  <label className="text-xs text-muted">Scoring prompt</label>
-                  <InfoTip>
-                    Instructions the AI uses to grade each lead. Edit freely.
-                  </InfoTip>
-                  <span className="text-muted-soft text-[11px]">·</span>
-                  <span className="text-[11px] text-muted-soft">
-                    used to grade every lead
-                  </span>
-                </div>
+              <div className="relative">
                 <textarea
                   value={icpPrompt}
-                  onChange={(e) => setIcpPrompt(e.target.value)}
-                  rows={9}
-                  placeholder="Click Generate score prompt above, or write your own here."
-                  className="px-3 py-2.5 rounded-md border bg-background text-sm leading-relaxed focus:outline-none focus:border-foreground transition-colors resize-y min-h-44"
+                  onChange={(e) => {
+                    setIcpPrompt(e.target.value);
+                    if (preEnhanceDraft != null) setPreEnhanceDraft(null);
+                  }}
+                  rows={14}
+                  disabled={enhancing}
+                  placeholder={`What do you sell, and to whom?\nWhat does a strong fit company look like (industry, size, role, signals)?\nAny red flags that mean someone is a bad fit?\n\nWrite it like you'd explain it to a new sales rep. Don't worry about formatting.`}
+                  className="w-full px-3 py-3 pb-12 rounded-md border bg-background text-sm leading-relaxed focus:outline-none focus:border-foreground transition-colors resize-y min-h-56 disabled:opacity-60"
                 />
+
+                {enhancing && (
+                  <div className="absolute inset-0 rounded-md bg-background/60 backdrop-blur-[1px] flex items-center justify-center pointer-events-none">
+                    <div className="flex flex-col items-center gap-2 px-4 py-3 rounded-md border bg-background shadow-sm">
+                      <div className="flex items-center gap-2 text-sm font-medium">
+                        <Spinner />
+                        <span>
+                          Enhancing
+                          <DotPulse />
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-muted">
+                        Restructuring and sharpening your draft.
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
+                  {preEnhanceDraft != null && !enhancing && (
+                    <button
+                      onClick={undoEnhance}
+                      title="Undo enhance"
+                      className="h-7 px-2.5 rounded-md text-[11px] font-medium text-muted hover:text-foreground hover:bg-surface transition-colors cursor-pointer"
+                    >
+                      Undo
+                    </button>
+                  )}
+                  <button
+                    onClick={enhancePrompt}
+                    disabled={enhancing || !icpPrompt.trim()}
+                    title="Improve and structure with AI"
+                    className="h-7 px-2.5 rounded-md bg-brand text-white text-[11px] font-semibold hover:bg-brand-hover transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <SparkleIcon />
+                    Enhance with AI
+                  </button>
+                </div>
               </div>
+
+              {enhanceError && (
+                <p className="text-xs text-danger">Could not enhance. Try again.</p>
+              )}
             </section>
 
             <hr className="border-border" />
@@ -652,10 +575,6 @@ export default function ToolPage() {
         </section>
       </div>
 
-      {trialHit && !srKey && !settingsOpen && (
-        <TrialReminderPill onClick={() => openSettings("trial_ended")} />
-      )}
-
       {settingsOpen && (
         <SettingsModal
           srKey={srKey}
@@ -672,16 +591,16 @@ function TrialReminderPill({ onClick }) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 h-10 pl-3 pr-4 rounded-full bg-foreground text-background text-xs font-semibold shadow-xl hover:opacity-90 transition-opacity cursor-pointer"
+      title="Free trial used. Click to add your Screenshot Render API key."
+      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-orange-50 text-orange-700 border border-orange-200 text-xs font-semibold hover:bg-orange-100 transition-colors cursor-pointer animate-[pulse-soft_2s_ease-in-out_infinite]"
     >
-      <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-orange-500 text-white">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="12" y1="9" x2="12" y2="13" />
-          <line x1="12" y1="17" x2="12.01" y2="17" />
-          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-        </svg>
-      </span>
-      Add Screenshot Render key
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      </svg>
+      <span className="hidden sm:inline">Add Screenshot Render key</span>
+      <span className="sm:hidden">Add key</span>
     </button>
   );
 }
@@ -1021,7 +940,7 @@ function SettingsModal({ srKey, setSrKey, mode, onClose }) {
         title: "Free scorings used for this run",
         body: (
           <>
-            To keep scoring leads, get a free API key from{" "}
+            We use{" "}
             <a
               href="https://screenshotrender.com"
               target="_blank"
@@ -1029,8 +948,8 @@ function SettingsModal({ srKey, setSrKey, mode, onClose }) {
               className="text-orange-500 font-semibold hover:underline"
             >
               Screenshot Render
-            </a>
-            . Sign up and get 100 free credits. Paste your key below.
+            </a>{" "}
+            to capture pages. Grab your own free API key and paste it below to keep scoring.
           </>
         ),
       };
@@ -1059,7 +978,20 @@ function SettingsModal({ srKey, setSrKey, mode, onClose }) {
       return {
         tone: "red",
         title: "That key didn't work",
-        body: "Please paste a valid Screenshot Render API key.",
+        body: (
+          <>
+            Please paste a valid{" "}
+            <a
+              href="https://screenshotrender.com"
+              target="_blank"
+              rel="noreferrer"
+              className="text-orange-500 font-semibold hover:underline"
+            >
+              Screenshot Render
+            </a>{" "}
+            API key.
+          </>
+        ),
       };
     }
     return null;
@@ -1106,7 +1038,7 @@ function SettingsModal({ srKey, setSrKey, mode, onClose }) {
             <div className="text-sm">
               <div className="font-semibold">The AI is on us.</div>
               <p className="text-muted mt-1 leading-relaxed">
-                Sign up to{" "}
+                Get your API key from{" "}
                 <a
                   href={helpHref}
                   target="_blank"
@@ -1114,8 +1046,8 @@ function SettingsModal({ srKey, setSrKey, mode, onClose }) {
                   className="text-orange-500 font-semibold hover:underline"
                 >
                   Screenshot Render
-                </a>{" "}
-                and get 100 free credits.
+                </a>
+                .
               </p>
             </div>
           )}

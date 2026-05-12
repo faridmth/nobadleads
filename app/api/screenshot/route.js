@@ -39,26 +39,35 @@ export async function POST(req) {
     );
   }
   const normalized = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+  const apiUrl = `https://screenshotrender.com/api/v1/screenshot?apiKey=${apiKey}&url=${encodeURIComponent(
+    normalized
+  )}&fullPage=true&wait=3`;
 
-  try {
-    const apiUrl = `https://screenshotrender.com/api/v1/screenshot?apiKey=${apiKey}&url=${encodeURIComponent(
-      normalized
-    )}&fullPage=true&wait=3`;
-    const res = await fetch(apiUrl);
-    const json = await res.json();
-    if (!res.ok || !json.success) {
-      const message = json.error || `Screenshot failed (${res.status})`;
-      return Response.json(
-        { success: false, error: message, code: classifyError(message), usedFreeKey: !userKey },
-        { status: 502 }
-      );
+  async function attempt() {
+    try {
+      const res = await fetch(apiUrl);
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        const message = json.error || `Screenshot failed (${res.status})`;
+        return { ok: false, status: 502, message, code: classifyError(message) };
+      }
+      return { ok: true, json };
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Network error";
+      return { ok: false, status: 500, message, code: "other" };
     }
-    return Response.json({ ...json, usedFreeKey: !userKey });
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Network error";
+  }
+
+  let result = await attempt();
+  if (!result.ok && result.code === "other") {
+    result = await attempt();
+  }
+
+  if (!result.ok) {
     return Response.json(
-      { success: false, error: message, code: "other", usedFreeKey: !userKey },
-      { status: 500 }
+      { success: false, error: result.message, code: result.code, usedFreeKey: !userKey },
+      { status: result.status }
     );
   }
+  return Response.json({ ...result.json, usedFreeKey: !userKey });
 }
