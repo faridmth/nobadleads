@@ -18,6 +18,9 @@ export const metadata = {
   title: DEFAULT_TITLE,
   description: DEFAULT_DESCRIPTION,
   alternates: { canonical: "/" },
+  verification: {
+    google: "kMJhw2rVQQWxYSlGtjgdODmUvHo1jWNWKrUsD53U4fs",
+  },
   openGraph: {
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
