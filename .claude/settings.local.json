@@ -5,7 +5,19 @@
       "Bash(npx tsc *)",
       "Bash(npx next *)",
       "Bash(rm -f next.config.ts next-env.d.ts tsconfig.json app/layout.tsx app/page.tsx app/tool/page.tsx app/api/screenshot/route.ts app/api/build-prompt/route.ts app/api/score/route.ts)",
-      "Bash(mv .env.local .env)"
+      "Bash(mv .env.local .env)",
+      "Bash(mkdir -p c:/Users/Farid/Desktop/leadqualifier/content/posts c:/Users/Farid/Desktop/leadqualifier/app/blog c:/Users/Farid/Desktop/leadqualifier/app/blog/_components \"c:/Users/Farid/Desktop/leadqualifier/app/blog/[slug]\")",
+      "Bash(npx --no-install eslint app/blog content/posts app/api/subscribe)",
+      "Bash(npm run *)",
+      "WebSearch",
+      "WebFetch(domain:relevanceai.com)",
+      "WebFetch(domain:www.clay.com)",
+      "Bash(curl -s http://localhost:3000/sitemap.xml)",
+      "Bash(curl -s http://localhost:3000/robots.txt)",
+      "Bash(kill %1)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Farid\\Desktop\\leadqualifier\\app\\blog"
     ]
   }
 }

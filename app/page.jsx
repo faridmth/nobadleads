@@ -12,12 +12,20 @@ export default function Home() {
             <span>nobadleads<span className="text-brand">.</span></span>
           </span>
         </Link>
-        <Link
-          href="/tool"
-          className="text-sm font-medium text-muted hover:text-foreground transition-colors"
-        >
-          Open tool →
-        </Link>
+        <nav className="flex items-center gap-6">
+          <Link
+            href="/blog"
+            className="text-sm font-medium text-muted hover:text-foreground transition-colors"
+          >
+            Blog
+          </Link>
+          <Link
+            href="/tool"
+            className="text-sm font-medium text-muted hover:text-foreground transition-colors"
+          >
+            Open tool →
+          </Link>
+        </nav>
       </header>
 
       <section className="flex-1 flex flex-col items-center justify-center px-6 py-16 md:py-20">
