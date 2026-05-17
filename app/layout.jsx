@@ -8,7 +8,7 @@ const manrope = Manrope({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nobadleads.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.nobadleads.com";
 const DEFAULT_TITLE = "nobadleads · Score leads from a spreadsheet";
 const DEFAULT_DESCRIPTION =
   "Upload an Excel of leads, get an ICP score and three cold email openers for each, powered by website screenshots and GPT-4o.";

@@ -35,6 +35,19 @@ Before any other tool call, `Read` the following files in this order (paths are 
 4. `materials/keywords.csv` — keyword research, all rows.
 5. `content/posts/index.jsx` — the registry. Note every existing slug, title, and category.
 6. `content/author.js` — the shared byline. Do not add per-post author fields to meta.
+7. **The last 3–5 existing posts in `content/posts/*.jsx`** (most recent by `meta.date`). You are reading them to avoid repeating yourself — see the anti-repetition rule below.
+
+### Anti-repetition rule (read before drafting)
+
+Before writing a single sentence of the new article, skim the recent posts you just loaded and note:
+
+- **Cold-open scenes already used** — the spreadsheet-at-midnight, the Monday-morning-CRM, the rep-staring-at-LinkedIn, etc. Do not reuse any opening scene, setup, or framing device. Pick a fresh angle (different role, different time of day, different artifact on screen, different emotion).
+- **Recurring phrases and turns** — stock lines like "here's the thing," "the uncomfortable truth," "what good looks like," "stop guessing, start qualifying," etc. If a phrase appears in a recent post, do not reuse it verbatim — reword.
+- **Reused metaphors / framings** — fishing-net, funnel-as-sieve, signal-vs-noise, etc. Pick a new one.
+- **Failure-mode names** — do not reuse the same H3 names from prior posts; rename even if the underlying concept overlaps.
+- **CTA copy** — already covered in Phase 3, but worth restating: every `<ArticleCTA />` title/body/button must be article-specific and visibly different from prior ones.
+
+A reader who lands on three nobadleads posts in a row should not feel they're reading the same article with the search term swapped. If two posts genuinely need to make the same point, make it from a different angle and with different sentences.
 
 If any of these files genuinely don't exist at the project root, stop and tell the user. Do **not** infer that they're missing from the absence of a `materials/` subfolder inside `.claude/skills/write-blog-article/` — that subfolder is not supposed to exist; the real files live at the repo root.
 
@@ -200,6 +213,7 @@ Then stop.
 
 The playbook has the full list with explanations. The shortlist for fast reference:
 
+- Reusing a prior post's cold-open, metaphor, or stock phrase → check recent posts in Phase 0, pick a fresh angle.
 - Choppy three-word punch sentences → write at 18–30 words flowing.
 - Jargon (firmographic, behavioral, calibrated…) → plain words.
 - CTA copy reused across articles → article-specific or build error.

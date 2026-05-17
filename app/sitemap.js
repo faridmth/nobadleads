@@ -5,7 +5,7 @@ import {
   categoryToSlug,
 } from "../content/posts";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nobadleads.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.nobadleads.com";
 
 export default function sitemap() {
   const now = new Date();
