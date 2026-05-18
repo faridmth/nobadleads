@@ -10,11 +10,10 @@ export default function BlogListing({ category = null, page = 1 }) {
     ? posts.filter((p) => p.category === category)
     : posts;
 
-  const featured = filtered.filter((p) => p.featured);
-  const heroFeatured = featured[0] || filtered[0];
-  const sideFeatured = (
-    featured.length > 1 ? featured.slice(1) : filtered.slice(1, 4)
-  ).slice(0, 3);
+  // "What's new" always leads with the most recently published post.
+  // `posts` is already sorted by date desc in content/posts/index.jsx.
+  const heroFeatured = filtered[0];
+  const sideFeatured = filtered.slice(1, 4);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(Math.max(1, page), totalPages);

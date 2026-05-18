@@ -101,7 +101,7 @@ No checkpoint here — proceed straight to Phase 3 once the analysis is reported
 2. **Write the meta object first** (see playbook for exact shape). Fill everything except `cover.image` and `cover.alt` — those land in Phase 5.
    - Title 50–60 chars, primary keyword near the start.
    - Excerpt 150–160 chars, includes the primary keyword and a soft benefit. Count, don't guess.
-   - `category` — reuse an existing category from the registry if appropriate, or create a new one only if the topic genuinely doesn't fit.
+   - `category` — **pick the most topically relevant category, never default to whatever the previous post used.** Read the post's actual subject (workflow / tactic / framework / tool / market trend) and match it. Reuse an existing registry category only when it genuinely fits; otherwise create a new one (e.g. `"Sales Playbooks"` for operational checklists/process posts, `"AI and Outreach"` for AI-tool-centric posts, `"Lead Generation"` for top-of-funnel acquisition posts). If two posts in a row land in the same category, ask yourself whether the second one is really the same topic or you're just copying the field — copying is a bug.
    - `date` and `updated` — today's date.
    - `featured: false` by default; ask the user before flipping it to true.
    - `faqs` array with 5–8 Q&A entries, each answer 40–80 words, direct answer first.
@@ -206,6 +206,15 @@ Then stop.
 - [ ] `npm run build` clean and route listed.
 - [ ] `/sitemap.xml` contains the new URL.
 - [ ] `/robots.txt` unchanged.
+
+---
+
+## Invariants the writer must not break
+
+These are site-wide behaviors a finished article relies on. They live in components, not in posts — so a normal blog-writing run never edits them. They are listed here so that if a future change accidentally regresses one, the next run notices.
+
+- **The blog index "What's new" section leads with the most recently published post**, not with a `featured: true` flag. `BlogListing.jsx` derives the hero from `filtered[0]` (the date-sorted registry). Do not reintroduce a `featured`-first hero — when a fresh article ships, it must surface immediately at the top of `/blog` without requiring anyone to toggle a flag on the older post.
+- **The article Table of Contents shows H2 headings only — not H3.** `ArticleSidebar.jsx` queries `.prose-blog h2`. The named-failure-mode H3s are intentionally excluded because including them makes the TOC noisy and hard to scan in live use. Do not widen the selector to include H3.
 
 ---
 
