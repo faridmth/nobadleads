@@ -1,12 +1,14 @@
 import * as aiLeadQualification from "./ai-lead-qualification.jsx";
 import * as inboundLeadQualification from "./inbound-lead-qualification.jsx";
 import * as leadQualificationChecklist from "./lead-qualification-checklist.jsx";
+import * as leadQualificationProcess from "./lead-qualification-process.jsx";
 import * as outboundLeadQualification from "./outbound-lead-qualification.jsx";
 
 const modules = [
   aiLeadQualification,
   inboundLeadQualification,
   leadQualificationChecklist,
+  leadQualificationProcess,
   outboundLeadQualification,
 ];
 
