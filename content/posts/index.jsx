@@ -5,6 +5,7 @@ import * as leadQualificationProcess from "./lead-qualification-process.jsx";
 import * as outboundLeadQualification from "./outbound-lead-qualification.jsx";
 import * as leadScoringTemplate from "./lead-scoring-template.jsx";
 import * as leadScoringSoftware from "./lead-scoring-software.jsx";
+import * as leadQualificationCriteria from "./lead-qualification-criteria.jsx";
 
 const modules = [
   aiLeadQualification,
@@ -14,6 +15,7 @@ const modules = [
   outboundLeadQualification,
   leadScoringTemplate,
   leadScoringSoftware,
+  leadQualificationCriteria,
 ];
 
 export const posts = modules
