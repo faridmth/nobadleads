@@ -4,7 +4,7 @@ export const meta = {
   slug: "lead-scoring-template",
   title: "Lead Scoring Template: Build a Model You Can Trust",
   excerpt:
-    "A lead scoring template starts strong, then quietly decays. Here is how to build a scoring model your reps trust, and spot the patterns that break the rest.",
+    "A lead scoring template feels clean for a quarter, then breaks. This is how to build a model your reps actually trust, and the small habits that keep it sharp.",
   category: "Sales Playbooks",
   readTime: "10 min read",
   date: "2026-05-21",

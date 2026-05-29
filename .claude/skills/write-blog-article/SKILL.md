@@ -20,8 +20,9 @@ If the user's working directory is `c:\Users\Farid\Desktop\leadqualifier`, then:
 1. **Read the playbook first.** Then re-read it every time a step is unclear. Do not improvise around it.
 2. **Stop and ask the user at the two explicit checkpoints below.** Never silently skip them.
 3. **Style and quality always beat SEO.** When the on-page-seo checklist conflicts with the style guide, style wins. Never pad a paragraph to hit a word count; never force a keyword into a sentence that reads weird.
-4. **The only files a finished run creates or changes:** `content/posts/<slug>.jsx`, `content/posts/index.jsx`, and (optionally) `public/blog/<slug>.<ext>`. Do not edit `app/sitemap.js`, `app/robots.js`, `content/author.js`, or any component file as part of writing a post.
+4. **The only files a finished run creates or changes:** `content/posts/<slug>.jsx`, `content/posts/index.jsx`, (optionally) `public/blog/<slug>.<ext>`, **and 1–2 older `content/posts/*.jsx` files that receive an inbound link to the new post** (see Phase 3, step 8). Do not edit `app/sitemap.js`, `app/robots.js`, `content/author.js`, or any component file as part of writing a post. When editing older posts for the inbound link, change *only* prose — never their `meta` blocks.
 5. **Verify before declaring done.** All four checks in Phase 6 must pass.
+6. **No em-dashes (—) or en-dashes (–) anywhere in published content.** Em-dashes are the single most reliable "this was written by AI" tell in 2026, and readers (and SERP scanners) clock them instantly. This applies to **article body, `meta.title`, `meta.excerpt`, `meta.cover.title/alt`, CTA copy, FAQ Qs/As, image alt text — everything that ships to the browser.** Use a period, comma, semicolon, parentheses, or a sentence rewrite instead. Regular hyphens inside compound words (`cold-email`, `high-intent`, `follow-up`) are fine — the rule is specifically about dashes used as **punctuation**. This rule applies to writer output only; the SKILL.md prose itself is allowed to use em-dashes since Google never reads it.
 
 ---
 
@@ -99,14 +100,15 @@ No checkpoint here — proceed straight to Phase 3 once the analysis is reported
 
 1. **Pick the slug.** Kebab-case, under 60 chars, lowercase, hyphens only, no stop words, primary keyword inside.
 2. **Write the meta object first** (see playbook for exact shape). Fill everything except `cover.image` and `cover.alt` — those land in Phase 5.
-   - Title 50–60 chars, primary keyword near the start.
-   - Excerpt 150–160 chars, includes the primary keyword and a soft benefit. Count, don't guess.
+   - Title **≤ 46 chars**, primary keyword near the start. The slug page at `app/blog/[slug]/page.jsx` appends ` · nobadleads` (14 chars) to produce the final `<title>` tag, so a 46-char `meta.title` becomes a 60-char rendered title — the SEO cap. Count, don't guess. Semrush has flagged this before (May 2026: 3 posts over the cap).
+   - Excerpt 150–160 chars, includes the primary keyword and a soft benefit. Count, don't guess. **Must read like a human wrote it** — see the "AI tells to avoid" block below. Specifically: never open with the primary keyword as the first noun phrase ("Lead scoring software does X…"); never use the construction "Here is how to…" / "Here are the…"; vary the rhythm across posts so two excerpts in the registry don't share the same sentence shape; use a contraction or a specific number where it reads natural.
    - `category` — **pick the most topically relevant category, never default to whatever the previous post used.** Read the post's actual subject (workflow / tactic / framework / tool / market trend) and match it. Reuse an existing registry category only when it genuinely fits; otherwise create a new one (e.g. `"Sales Playbooks"` for operational checklists/process posts, `"AI and Outreach"` for AI-tool-centric posts, `"Lead Generation"` for top-of-funnel acquisition posts). If two posts in a row land in the same category, ask yourself whether the second one is really the same topic or you're just copying the field — copying is a bug.
    - `date` and `updated` — today's date.
    - `featured: false` by default; ask the user before flipping it to true.
    - `faqs` array with 5–8 Q&A entries, each answer 40–80 words, direct answer first.
    - **Never add `author` or `authorBio`** — those are centralized in `content/author.js`.
-3. **Write the body** following the playbook skeleton:
+3. **Plan the H2s using the cluster keywords.** Before writing prose, sketch the H2 list. At least **2–3 H2s must reuse exact phrases from the cluster** you picked in Phase 1 (e.g., if the cluster includes `"lead scoring model"`, an H2 should literally be `"How to build a lead scoring model that holds up"`, not `"Building something durable"`). One H2 must contain the **primary keyword verbatim**. Do not make every H2 keyword-stuffed — 2–3 cluster H2s + 1 primary-keyword H2 out of ~6 total is the right mix; the rest stay editorial. The cluster is the single biggest unused ranking lever — surfacing it in headings tells Google the article covers the full topical neighborhood, not just the head term.
+4. **Write the body** following the playbook skeleton:
    1. Cold-open scene (2–4 short paragraphs, second person, present tense).
    2. Pivot containing or immediately followed by the primary keyword (so it lands in the first 100 words).
    3. One-paragraph reframe.
@@ -117,9 +119,9 @@ No checkpoint here — proceed straight to Phase 3 once the analysis is reported
    8. `<h2>Frequently Asked Questions</h2>` with the same 5–8 Qs from `meta.faqs`, each Q in `<h3>`.
    9. Soft close that restates the thesis in new words.
    10. One inline text CTA in the last paragraph (a link to `/tool` or to a related post). Not a banner.
-4. **Plain-English pass.** Re-read every paragraph. If a sentence makes you pause and re-read, rewrite. Replace jargon (*firmographic, behavioral signals, calibrated, infrastructure, ingest, stack, leverage*) with plain words. Sentences flow at 18–30 words. One-sentence paragraphs are rare (max 2 per article).
-5. **Tool integration.** Name nobadleads **once in the body** (after the problem is agitated, framed as "what a good tool does") and **once in the closing paragraph**. All other product mentions must read as advice about a good tool, not a pitch.
-6. **External links.** Add 2–3 contextual links to authoritative sources (.gov, .edu, or major industry — HubSpot, Salesforce, McKinsey, Gartner, MEDDIC Institute, etc.). **Every external `<a>` MUST include both `target="_blank"` AND `rel="noopener noreferrer"`** — no exceptions. Format:
+5. **Plain-English pass.** Re-read every paragraph. If a sentence makes you pause and re-read, rewrite. Replace jargon (*firmographic, behavioral signals, calibrated, infrastructure, ingest, stack, leverage*) with plain words. Sentences flow at 18–30 words. One-sentence paragraphs are rare (max 2 per article).
+6. **Tool integration.** Name nobadleads **once in the body** (after the problem is agitated, framed as "what a good tool does") and **once in the closing paragraph**. All other product mentions must read as advice about a good tool, not a pitch.
+7. **External links.** Add 2–3 contextual links to authoritative sources (.gov, .edu, or major industry — HubSpot, Salesforce, McKinsey, Gartner, MEDDIC Institute, etc.). **Every external `<a>` MUST include both `target="_blank"` AND `rel="noopener noreferrer"`** — no exceptions. Format:
    ```jsx
    <a
      href="https://example.com/source"
@@ -130,8 +132,10 @@ No checkpoint here — proceed straight to Phase 3 once the analysis is reported
    </a>
    ```
    `noopener` blocks the linked site from accessing `window.opener` (security); `noreferrer` strips the referrer header (privacy). Internal Next `<Link>` components don't need these attributes — only external `<a>` tags do.
-7. **Internal links.** 3–5 inline links to `/tool`, `/blog`, or other existing posts. Descriptive anchor text — never "click here."
-8. Write the new file at `content/posts/<slug>.jsx`. Import `ArticleCTA` from `"../../app/blog/_components/ArticleCTA"`.
+8. **Internal links — outbound and inbound.**
+   - **Outbound (from this new post):** 3–5 inline links to `/tool`, `/blog`, or other existing posts. Descriptive anchor text — never "click here." Anchor text should be the *target post's* primary keyword when possible, not generic phrasing.
+   - **Inbound (from older posts back to this one):** Pick **1–2 topically related older posts** and edit them to add a contextual link pointing to the new post. Anchor text = the new post's primary keyword. This is the back-linking step writers forget — without it, the new post launches with zero internal authority. Edit the older posts' `.jsx` files directly; do not touch their `meta` blocks. If no older post is topically related enough to host a natural link, say so explicitly in the final report — do not force an awkward link.
+9. Write the new file at `content/posts/<slug>.jsx`. Import `ArticleCTA` from `"../../app/blog/_components/ArticleCTA"`.
 
 ---
 
@@ -190,7 +194,12 @@ Then stop.
 
 ## Quality bar (final checklist — every box must be true before reporting done)
 
-- [ ] Primary keyword in title, slug, first 100 words, ≥ 1 H2.
+- [ ] Zero em-dashes (—) and zero en-dashes (–) in any browser-shipped string (body, title, excerpt, alt, CTA, FAQ).
+- [ ] Excerpt does not open with the primary keyword phrase as the subject, does not contain "Here is how / Here are the", and does not reuse a sentence shape from another post's excerpt.
+- [ ] `meta.title` ≤ 46 chars (final rendered `<title>` will be ≤ 60 after the ` · nobadleads` suffix).
+- [ ] Primary keyword in title, slug, first 100 words, ≥ 1 H2 verbatim.
+- [ ] 2–3 H2s reuse exact cluster keywords from Phase 1.
+- [ ] 1–2 older posts edited to add an inbound link to the new post (or explicitly reported as "no natural fit").
 - [ ] Meta description 150–160 chars.
 - [ ] Cover image set in `meta.cover.image` with descriptive `alt` (or user explicitly skipped).
 - [ ] Body length within ±20% of SERP top-3 average (or shorter if quality demands it).
@@ -218,6 +227,23 @@ These are site-wide behaviors a finished article relies on. They live in compone
 
 ---
 
+## AI tells to avoid — these get content distrusted
+
+In May 2026 the user audited the live SERP and every excerpt the skill had produced looked obviously machine-written. Readers and SEO scanners now flag these tells almost immediately. Avoid all of them in **anything that ships to the browser** (body, meta, alt, CTA, FAQ):
+
+- **Em-dashes (—) and en-dashes (–) as punctuation.** Replace with periods, commas, semicolons, parentheses, or a rewrite. The single most reliable AI fingerprint.
+- **"Here is how to / Here are the / Here is what…"** — chatbot scaffolding. Drop the scaffolding and state the thing directly.
+- **Tricolons with the same shape every time** ("It's faster, cleaner, and smarter.", "fit, intent, and disqualifier signals", "map the stages, find the leaks, and score the leads"). Tricolons are fine occasionally but not in every excerpt and every paragraph.
+- **The "X promises Y, then quietly Z" sentence template.** Used in three of the original excerpts ("software promises clean priorities, then quietly drifts" / "template starts strong, then quietly decays" / "removes the manual triage step that quietly kills"). Pick a different shape.
+- **Opening the excerpt with the exact primary keyword phrase as the subject.** Reads as SEO-padding. Lead with the pain, the audience, or a specific number, and place the keyword in the second clause.
+- **No contractions anywhere.** Real writing uses "it's", "don't", "you're" naturally. A 600-word post with zero contractions reads robotic.
+- **"In today's…", "In the world of…", "When it comes to…", "It's important to note that…"** — all banned.
+- **"Leverage, utilize, robust, seamless, holistic, comprehensive, navigate the landscape, unlock the power of"** — banned. Use "use", "strong", "smooth", "whole", "full", "find your way through", "get more out of".
+- **Same paragraph length for 6 paragraphs in a row.** Vary it. A 5-word sentence next to a 28-word sentence reads human; uniform 20-word sentences read generated.
+- **Every list item starting with the same part of speech.** Mix verbs, nouns, and questions.
+
+A useful test: read the excerpt out loud. If it sounds like a chatbot answering a prompt, rewrite it. If it sounds like something a sales rep would say in a Slack thread, ship it.
+
 ## Known pitfalls — never re-introduce these
 
 The playbook has the full list with explanations. The shortlist for fast reference:
@@ -229,6 +255,7 @@ The playbook has the full list with explanations. The shortlist for fast referen
 - CTA text invisible → use `<div>` not `<h3>/<p>` (`.prose-blog` overrides).
 - CTA button underlined → inline `style={{ textDecoration: "none" }}`.
 - Primary keyword missing from first 100 words → fold into the pivot.
+- Rendered `<title>` over 60 chars because writer forgot the ` · nobadleads` suffix → cap `meta.title` at 46 chars.
 - Per-post author drift → use `content/author.js`, never override.
 - Post invisible because not in registry → Phase 4 + Phase 6 catch it.
 - LCP issues → `priority` + explicit `fetchPriority="high"` + preload link are already wired in `[slug]/page.jsx` and `PostCard.jsx`; writers don't have to do anything beyond `meta.cover.image`.

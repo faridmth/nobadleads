@@ -4,7 +4,7 @@ export const meta = {
   slug: "automated-lead-qualification",
   title: "Automated Lead Qualification: Stop Triaging Leads by Hand",
   excerpt:
-    "Automated lead qualification removes the manual triage step that quietly kills your inbound pipeline. Here is what good automation does, and where it fails.",
+    "Manual triage is where pipeline quietly goes to die. See what automated lead qualification actually gets right, where it fails, and how to tell the two apart.",
   category: "Sales Automation",
   readTime: "10 min read",
   date: "2026-05-24",

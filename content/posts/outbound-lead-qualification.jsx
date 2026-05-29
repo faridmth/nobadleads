@@ -4,7 +4,7 @@ export const meta = {
   slug: "outbound-lead-qualification",
   title: "Outbound Lead Qualification: Filter Cold Lists Fast",
   excerpt:
-    "Outbound lead qualification breaks when reps grade a cold list in their inbox. Here is how to filter every prospect in seconds with a score and a clear reason.",
+    "Cold lists waste hours when reps grade them by hand. This is the fast way to filter every prospect, give each one a score, and a clear reason to call.",
   category: "Lead Generation",
   readTime: "11 min read",
   date: "2026-05-19",

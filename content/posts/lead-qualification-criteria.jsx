@@ -4,7 +4,7 @@ export const meta = {
   slug: "lead-qualification-criteria",
   title: "Lead Qualification Criteria: Signals That Predict a Buyer",
   excerpt:
-    "Lead qualification criteria are not BANT. They are the fit, intent, and disqualifier signals that sort real buyers from busywork before the first call.",
+    "BANT stopped working a while ago. Real lead qualification criteria mix fit, intent, and disqualifier signals so reps stop burning calls on prospects who never buy.",
   category: "Qualifying Leads",
   readTime: "11 min read",
   date: "2026-05-23",
@@ -406,7 +406,13 @@ export default function Post() {
           lead qualification checklist
         </a>{" "}
         covers the pass-or-fail decisions a rep should be running inside
-        that call, and the{" "}
+        that call. For the workflow that sits between the criteria and the
+        call, our piece on{" "}
+        <a href="/blog/how-to-qualify-sales-leads">
+          how to qualify sales leads
+        </a>{" "}
+        runs through the pre-call checks that turn criteria into a sorted
+        list, and the{" "}
         <a href="/blog/ai-lead-qualification">AI lead qualification</a>{" "}
         article walks through what changes once a tool is reading every
         website for you before the call ever happens.

@@ -4,7 +4,7 @@ export const meta = {
   slug: "inbound-lead-qualification",
   title: "Inbound Lead Qualification: Score Form Fills in Minutes",
   excerpt:
-    "Inbound lead qualification breaks the moment a form fill sits cold for hours. Here is how to score every inbound lead in minutes, without killing conversion.",
+    "Form fills cool off fast. This is how to qualify every inbound lead in minutes, route the hot ones first, and stop killing conversion with slow follow-up.",
   category: "AI and Outreach",
   readTime: "11 min read",
   date: "2026-05-17",

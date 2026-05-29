@@ -4,7 +4,7 @@ export const meta = {
   slug: "lead-qualification-process",
   title: "Lead Qualification Process: Stop Leads Dying Between Stages",
   excerpt:
-    "A lead qualification process leaks pipeline at the handoffs nobody owns. Here is how to map the stages, find the leaks, and score every lead in seconds.",
+    "Most pipeline leaks at the handoffs nobody owns. This breakdown of a working lead qualification process shows where leads die and how to score them fast.",
   category: "Sales Playbooks",
   readTime: "10 min read",
   date: "2026-05-20",
@@ -108,8 +108,14 @@ export default function Post() {
         <a href="/blog/lead-qualification-checklist">
           lead qualification checklist
         </a>{" "}
-        covers the nine that survive real use. This article is about the
-        pipeline those decisions sit inside.
+        covers the nine that survive real use. For the tactical version of
+        the same question, our piece on{" "}
+        <a href="/blog/how-to-qualify-sales-leads">
+          how to qualify sales leads
+        </a>{" "}
+        walks through the checks that should happen before the discovery
+        call gets booked. This article is about the pipeline those
+        decisions sit inside.
       </p>
 
       <h2>Four Places a Lead Qualification Process Quietly Leaks</h2>

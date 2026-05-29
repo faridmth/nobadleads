@@ -4,7 +4,7 @@ export const meta = {
   slug: "lead-scoring-software",
   title: "Lead Scoring Software: What It Must Do Before You Buy",
   excerpt:
-    "Lead scoring software promises clean priorities, then quietly drifts. Here is what it must do before you buy, and the failure modes that waste the budget.",
+    "Most lead scoring software looks great in the demo, then drifts by month three. These are the things it must actually do before you sign a contract.",
   category: "Sales Tools",
   readTime: "10 min read",
   date: "2026-05-22",

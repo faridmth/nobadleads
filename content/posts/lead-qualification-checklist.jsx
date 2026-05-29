@@ -4,7 +4,7 @@ export const meta = {
   slug: "lead-qualification-checklist",
   title: "Lead Qualification Checklist: 9 Steps That Actually Hold Up",
   excerpt:
-    "A lead qualification checklist only helps when your team actually runs it. Here are the nine steps that survive real use, and the patterns that kill the rest.",
+    "Most checklists get printed once and forgotten. These 9 qualification steps survive a busy week, and the ones we cut never made it past month two.",
   category: "Sales Playbooks",
   readTime: "10 min read",
   date: "2026-05-18",

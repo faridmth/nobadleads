@@ -5,7 +5,7 @@ export const meta = {
   title:
     "AI Lead Qualification: Pick the Right Leads Without Reading Every Website",
   excerpt:
-    "AI lead qualification scores every prospect against your ICP in seconds. Here is how it works, why manual methods break, and what to look for in a tool.",
+    "Most reps still read every prospect website by hand. AI lead qualification does it in seconds, scores against your ICP, and tells you why a lead actually fits.",
   category: "AI and Outreach",
   readTime: "9 min read",
   date: "2026-05-15",

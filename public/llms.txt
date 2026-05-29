@@ -1,0 +1,25 @@
+# nobadleads
+
+> Upload an Excel of leads, get an ICP score and three cold email openers for each, powered by website screenshots and GPT-4o.
+
+nobadleads scores prospects from a spreadsheet against your ideal customer profile and writes three cold email openers per lead. The scoring uses a vision model that actually reads the prospect's website, not just firmographics. No CRM, no demo, no setup beyond pasting your ICP in plain English.
+
+## Core pages
+
+- [Home](https://www.nobadleads.com/): What the product does in one screen.
+- [Score your leads](https://www.nobadleads.com/tool): The tool itself — upload a spreadsheet, get scored leads back.
+- [Blog](https://www.nobadleads.com/blog): Practical playbooks on cold outreach, ICP scoring, and AI-driven prospecting.
+
+## Blog categories
+
+- [AI and Outreach](https://www.nobadleads.com/blog/category/ai-and-outreach)
+- [Lead Generation](https://www.nobadleads.com/blog/category/lead-generation)
+- [Qualifying Leads](https://www.nobadleads.com/blog/category/qualifying-leads)
+- [Sales Automation](https://www.nobadleads.com/blog/category/sales-automation)
+- [Sales Playbooks](https://www.nobadleads.com/blog/category/sales-playbooks)
+- [Sales Tools](https://www.nobadleads.com/blog/category/sales-tools)
+
+## Machine-readable
+
+- [Sitemap](https://www.nobadleads.com/sitemap.xml)
+- [Robots](https://www.nobadleads.com/robots.txt)
